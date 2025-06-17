@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('product_reports', function (Blueprint $table) {
             $table->id('report_id');
             $table->unsignedBigInteger('p_id');
-            $table->foreign('p_id')->references('p_id')->on('products')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('p_id')->references('p_id')->on('products');
             $table->date('report_date');
             $table->integer('remaining_qty');
             $table->timestamps();

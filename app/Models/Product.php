@@ -14,4 +14,9 @@ class Product extends Model
         'p_name',
         'total_qty',
     ];
+
+    // public function productReport()
+    // {
+    //     return $this->hasMany(ProductReport::class);
+    // }
 }

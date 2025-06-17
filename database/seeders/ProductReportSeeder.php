@@ -13,6 +13,6 @@ class ProductReportSeeder extends Seeder
      */
     public function run(): void
     {
-        ProductReport::factory(10)->create();
+       ProductReport::factory(5)->create();
     }
 }
