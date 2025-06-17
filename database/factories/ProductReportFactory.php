@@ -4,7 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Product;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Carbon\Carbon;
+use Carbon\CarbonPeriod;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\ProductReport>
@@ -19,9 +19,7 @@ class ProductReportFactory extends Factory
     public function definition(): array
     {
         return [
-            'p_id' => rand(1, 20),
-            'remaining_qty' => rand(1, 10),
-            'report_date' => Carbon::now()->subDays(rand(0, 365))->toDateString(),
+
         ];
     }
 }
