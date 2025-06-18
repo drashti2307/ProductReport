@@ -5,19 +5,29 @@
         <tr>
             <th></th>
             @foreach($days as $day)
-                <th scope="col">{{ $day }}</th>
+                <th>{{ $day }}</th>
             @endforeach
-
+        </tr>
+        <tr>
+            <th>Date</th>
             @foreach($dates as $date)
-                <th scope="col">{{ $date }}</th>
+                <th>{{ $date }}</th>
             @endforeach
         </tr>
     </thead>
     <tbody>
         <tr>
             @foreach($productDetails as $productDetail)
-                <td>{{ $productDetail->p_name }}</th>
-                <td>{{ $productDetail->remaining_qty }}</th>
+                    <tr>
+                    <td>{{ $productDetail-> p_name }}</td>
+                    @for($i=0; $i<=6; $i++)
+                        @if($productDetail-> report_date == $dates[$i])
+                            <td>{{ $productDetail-> remaining_qty }}</td>
+                        @else
+                            <td></td>
+                        @endif
+                    @endfor
+                </tr>
             @endforeach
         </tr>
     </tbody>

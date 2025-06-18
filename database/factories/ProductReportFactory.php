@@ -4,7 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Product;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Carbon\CarbonPeriod;
+use Faker\Factory as Faker;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\ProductReport>
@@ -18,8 +18,11 @@ class ProductReportFactory extends Factory
      */
     public function definition(): array
     {
+        $faker = Faker::create();
         return [
-
+            'p_id' => rand(1, 10),
+            'report_date' => $faker->dateTimeBetween('2025-06-01', 'now'),
+            'remaining_qty' => rand(1, 10),
         ];
     }
 }

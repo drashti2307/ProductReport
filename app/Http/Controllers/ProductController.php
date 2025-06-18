@@ -68,7 +68,9 @@ class ProductController extends Controller
         $productDetails = DB::table('products')
             ->join('product_reports', 'products.p_id', '=', 'product_reports.p_id')
             ->select('products.p_name', 'product_reports.report_date', 'product_reports.remaining_qty')
-            ->where('product_reports.report_date', '>=', $start->format('Y-m-d'))
+            ->orderBy('products.p_name', 'asc')
+            // ->orderBy('product_reports.report_date', 'asc')
+            ->where('product_reports.report_date', '>=', $start->format('2025-06-15'))
             ->where('product_reports.report_date', '<=', $end->format('Y-m-d'))
             ->get();
 
