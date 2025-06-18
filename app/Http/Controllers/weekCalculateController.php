@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-class weekCalculate extends Controller
+class weekCalculateController extends Controller
 {
     static function getWeek() : array {
         $month = date('m');
