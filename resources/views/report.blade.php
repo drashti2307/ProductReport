@@ -20,7 +20,7 @@
             @foreach($productDetails as $productDetail)
                     <tr>
                     <td>{{ $productDetail-> p_name }}</td>
-                    @for($i=0; $i<=6; $i++)
+                    @for($i=0; $i<count($dates); $i++)
                         @if($productDetail-> report_date == $dates[$i])
                             <td>{{ $productDetail-> remaining_qty }}</td>
                         @else

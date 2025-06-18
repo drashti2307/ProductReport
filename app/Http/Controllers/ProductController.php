@@ -51,10 +51,12 @@ class ProductController extends Controller
         //     ];
         // }
 
+        $weekInterval=json_decode($_GET['week']);
+        // return $weekInterval;
         $days = [];
         $dates = [];
-        $start = Carbon::now()->startOfWeek(Carbon::SUNDAY);
-        $end = Carbon::now()->endOfWeek(Carbon::SATURDAY);
+        $start =  Carbon::parse($weekInterval[0]);// Carbon::now()->startOfWeek(Carbon::SUNDAY);
+        $end =  Carbon::parse($weekInterval[1]); // Carbon::now()->endOfWeek(Carbon::SATURDAY);
         for ($day = $start->copy(); $day->lte($end); $day->addDay()) {
             $days[] = $day->format('l');
         }
@@ -69,8 +71,8 @@ class ProductController extends Controller
             ->join('product_reports', 'products.p_id', '=', 'product_reports.p_id')
             ->select('products.p_name', 'product_reports.report_date', 'product_reports.remaining_qty')
             ->orderBy('products.p_name', 'asc')
-            // ->orderBy('product_reports.report_date', 'asc')
-            ->where('product_reports.report_date', '>=', $start->format('2025-06-15'))
+            ->orderBy('product_reports.report_date', 'asc')
+            ->where('product_reports.report_date', '>=', $start->format('Y-m-d'))
             ->where('product_reports.report_date', '<=', $end->format('Y-m-d'))
             ->get();
 
