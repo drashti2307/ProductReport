@@ -13,49 +13,19 @@ use Illuminate\Support\Carbon;
 
 class ProductController extends Controller
 {
-    public function weeklyReport() {
-        // $product = DB::table('products')
-        //     ->select('p_id', 'p_name',)
-        //     ->whereColumn('p_id', 'product_reports.p_id');
 
-        // $reports = DB::table('product_reports')
-        //     ->joinLateral($product, 'report_date')->get();
-        // return $reports;
-
-        // $report = DB::table('products')
-        //     ->join('product_reports', function (JoinClause $join) {
-        //         $join->on('products.p_id', '=', 'product_reports.p_id')
-        //             ->where('product_reports.report_date', '=', '2025-06-08')
-        //             ->where('product_reports.report_date', '=', '2025-06-14');
-        //     })
-        //     ->get();
-        // return $report;
-        // $weekStartDate = Carbon::now()->startOfWeek();
-        // $weekEndDate = Carbon::now()->endOfWeek();
-        // // $productionData = ProductReport::whereBetween('report_date', [$weekStartDate, $weekEndDate])->get();
-        // // return $productionData;
-        // $product = Product::with(['product_reports' => function($query)
-        //  use ($weekStartDate, $weekEndDate) {
-        //     $query->whereBetween('report_date', [$weekStartDate, $weekEndDate]);
-        // }])->get();
-
-        // return $product;
-
-        // $startDate = Carbon::now()->subDays(7);
-        // $weeklyData = [];
-        // for ($i = 0; $i < 7; $i++) {
-        //     $date = $startDate->copy()->addDays($i);
-        //     $weeklyData[$date->format('Y-m-d')] = [
-        //         'p_name',
-        //         'remaining_qty' => rand(1, 10),
-        //     ];
-        // }
-
-        $weekInterval=json_decode($_GET['week']);
+    /**
+     * get weeek interval from query to fetch remaining quantity data from db.
+     *
+     * @return view
+     */
+    public function weeklyReport()
+    {
+        $weekInterval = json_decode($_GET['week']);
         // return $weekInterval;
         $days = [];
         $dates = [];
-        $start =  Carbon::parse($weekInterval[0]);// Carbon::now()->startOfWeek(Carbon::SUNDAY);
+        $start =  Carbon::parse($weekInterval[0]); // Carbon::now()->startOfWeek(Carbon::SUNDAY);
         $end =  Carbon::parse($weekInterval[1]); // Carbon::now()->endOfWeek(Carbon::SATURDAY);
         for ($day = $start->copy(); $day->lte($end); $day->addDay()) {
             $days[] = $day->format('l');
@@ -76,7 +46,36 @@ class ProductController extends Controller
             ->where('product_reports.report_date', '<=', $end->format('Y-m-d'))
             ->get();
 
-        // return $productDetails;
-        return view('report', [ 'days' => $days, 'dates' => $dates, 'productDetails' => $productDetails]);
+        // Example usage:
+        $transformed = $this->transformProductDetails($productDetails, $dates);
+        // return $transformed;
+        return view('report', ['days' => $days, 'dates' => $dates, 'productDetails' => $transformed]);
+    }
+
+
+    /**
+     * Transform product details to group by product name and map remaining_qty to week days.
+     *
+     * @param array $productDetails
+     * @param array $dates
+     * @return array
+     */
+    public function transformProductDetails($productDetails, $dates)
+    {
+        $result = [];
+        foreach ($productDetails as $item) {
+            $p_name = $item->p_name;
+            if (!isset($result[$p_name])) {
+                $result[$p_name] = [
+                    'p_name' => $p_name,
+                    'remaining_qty' => array_fill(0, count($dates), ""),
+                ];
+            }
+            $dateIndex = array_search($item->report_date, $dates);
+            if ($dateIndex !== false) {
+                $result[$p_name]['remaining_qty'][$dateIndex] = $item->remaining_qty;
+            }
+        }
+        return array_values($result);
     }
 }
