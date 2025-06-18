@@ -46,12 +46,11 @@ class ProductController extends Controller
             ->where('product_reports.report_date', '<=', $end->format('Y-m-d'))
             ->get();
 
-        // Example usage:
         $transformed = $this->transformProductDetails($productDetails, $dates);
         $total = $this->totalRemainings($transformed, $dates);
         // return $transformed;
         // return $total;
-        // return view('report', ['days' => $days, 'dates' => $dates, 'productDetails' => $transformed]);
+        // return view('report', ['days' => $days, 'dates' => $dates, 'productDetails' => $transformed, 'total' => $total]);
         $pdf = PDF::loadView('report', ['days' => $days, 'dates' => $dates, 'productDetails' => $transformed, 'total' => $total]);
         return $pdf->stream('ProductReport.pdf');
     }

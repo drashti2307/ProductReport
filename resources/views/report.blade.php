@@ -1,6 +1,6 @@
 @extends('layouts.default')
 @section('content')
-    <table class="table table-bordered border-black">
+    <table>
         <thead>
             <tr>
                 <th></th>

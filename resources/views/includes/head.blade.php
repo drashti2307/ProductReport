@@ -1,31 +1,34 @@
 <title>Product Report</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
 <style>
+    @page{ margin: 5px; }
     body {
         font-family: sans-serif;
         margin: 0;
-        padding: 0;
+        padding: 0px;
     }
 
     main {
-        /* padding: 2em; */
         text-align: center;
-        font-size: 14px;
+        font-size: 13px;
     }
 
-    table,
-    th,
-    td {
+    thead {
+        background-color: lightgray;
+    }
+
+    table {
+        width: 100%;
+    }
+
+    table, th, td {
         border: 1px solid black;
         border-collapse: collapse;
     }
 
-    header,
-    footer {
-        background-color: #f4f4f4;
-        /* padding: 1em; */
+    header, footer {
+        /* background-color: #f4f4f4; */
         text-align: center;
     }
 

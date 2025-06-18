@@ -1,1 +1,1 @@
-<p>© 2025 Report Generation Example</p>
+<p>Copyright © 2025</p>
