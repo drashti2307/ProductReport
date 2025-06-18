@@ -10,14 +10,22 @@
     }
 
     main {
-        padding: 2em;
+        /* padding: 2em; */
         text-align: center;
+        font-size: 14px;
+    }
+
+    table,
+    th,
+    td {
+        border: 1px solid black;
+        border-collapse: collapse;
     }
 
     header,
     footer {
         background-color: #f4f4f4;
-        padding: 1em;
+        /* padding: 1em; */
         text-align: center;
     }
 

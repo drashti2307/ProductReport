@@ -48,8 +48,12 @@ class ProductController extends Controller
 
         // Example usage:
         $transformed = $this->transformProductDetails($productDetails, $dates);
+        $total = $this->totalRemainings($transformed, $dates);
         // return $transformed;
-        return view('report', ['days' => $days, 'dates' => $dates, 'productDetails' => $transformed]);
+        // return $total;
+        // return view('report', ['days' => $days, 'dates' => $dates, 'productDetails' => $transformed]);
+        $pdf = PDF::loadView('report', ['days' => $days, 'dates' => $dates, 'productDetails' => $transformed, 'total' => $total]);
+        return $pdf->stream('ProductReport.pdf');
     }
 
 
@@ -77,5 +81,18 @@ class ProductController extends Controller
             }
         }
         return array_values($result);
+    }
+
+
+    public function totalRemainings($transformed, $dates)
+    {
+        $total = array_fill(0, count($dates), 0);
+        foreach ($transformed as $productDetail) {
+            for ($i = 0; $i < count($dates); $i++) {
+                if ($productDetail['remaining_qty'][$i] !== "")
+                    $total[$i] = array_sum(array($total[$i], $productDetail['remaining_qty'][$i]));
+            }
+        }
+        return $total;
     }
 }
