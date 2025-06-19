@@ -10,7 +10,7 @@ class weekCalculateController extends Controller
         $week = date('W', strtotime(date('Y-m-2')));
 
         $arr = [];
-        $start = date('m/1/Y');
+        $start = date('m/01/Y');
         $unix = strtotime($year . 'W' . $week . '+6 days');
         while (date('m', $unix) == $month) {
             $end = date('m/d/Y', $unix - 86400);
