@@ -4,23 +4,23 @@
         <thead>
             <tr>
                 <th></th>
-                @foreach ($days as $day)
-                    <th>{{ $day }}</th>
-                @endforeach
+                @for ($i = 0; $i < 4; $i++)
+                    <th>{{ $days[$i] }}</th>
+                @endfor
                 <th rowspan="2">Result</th>
             </tr>
             <tr>
                 <th>Date</th>
-                @foreach ($dates as $date)
-                    <th>{{ $date }}</th>
-                @endforeach
+                @for ($i = 0; $i < 4; $i++)
+                    <th>{{ $dates[$i] }}</th>
+                @endfor
             </tr>
         </thead>
         <tbody>
             @foreach ($productDetails as $productDetail)
                 <tr>
-                    <td>{{ $productDetail['p_name'] }}</td>
-                    @for ($i = 0; $i < count($dates); $i++)
+                    <td><b>{{ $productDetail['p_name'] }}</b></td>
+                    @for ($i = 0; $i < 4; $i++)
                         <td style="text-align: center">{{ $productDetail['remaining_qty'][$i] }}</td>
                     @endfor
                     <td></td>
@@ -28,13 +28,53 @@
             @endforeach
             <tr>
                 <th>Total</th>
-                @foreach ($total as $cell)
+                @for ($i = 0; $i < 4; $i++)
                     <td style="text-align: center">
-                        @if ($cell != 0)
-                            {{ $cell }}
+                        @if ($total[$i] != 0)
+                            {{ $total[$i] }}
                         @endif
                     </td>
-                @endforeach
+                @endfor
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+ 
+    <table>
+        <thead>
+            <tr>
+                <th></th>
+                @for ($i = 4; $i < count($days); $i++)
+                    <th>{{ $days[$i] }}</th>
+                @endfor
+                <th rowspan="2">Result</th>
+            </tr>
+            <tr>
+                <th>Date</th>
+                @for ($i = 4; $i < count($dates); $i++)
+                    <th>{{ $dates[$i] }}</th>
+                @endfor
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($productDetails as $productDetail)
+                <tr>
+                    <td><b>{{ $productDetail['p_name'] }}</b></td>
+                    @for ($i = 4; $i < count($dates); $i++)
+                        <td style="text-align: center">{{ $productDetail['remaining_qty'][$i] }}</td>
+                    @endfor
+                    <td></td>
+                </tr>
+            @endforeach
+            <tr>
+                <th>Total</th>
+                @for ($i = 4; $i < count($dates); $i++)
+                    <td style="text-align: center">
+                        @if ($total[$i] != 0)
+                            {{ $total[$i] }}
+                        @endif
+                    </td>
+                @endfor
                 <td></td>
             </tr>
         </tbody>

@@ -1,6 +1,3 @@
-<title>Product Report</title>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
     @page{ margin: 5px; }
     body {
@@ -25,6 +22,7 @@
     table, th, td {
         border: 1px solid black;
         border-collapse: collapse;
+        padding: 5px;
     }
 
     header, footer {
@@ -32,19 +30,14 @@
         text-align: center;
     }
 
-    .selection {
-        font-size: 20px;
-        height: 30px;
+    .form-select {
         width: 300px;
-        margin: 12px;
-        border: 1px solid #b9b9b9;
     }
 
-    button {
-        font-size: 25px;
-        color: antiquewhite;
-        background-color: #14922d;
-        border: 1px solid #14922d;
-        border-radius: 5px;
+    #weekForm {
+        border: 1px solid black;
+        width: 400px;
+        height: 300px;
+        margin-left: 400px;
     }
 </style>
