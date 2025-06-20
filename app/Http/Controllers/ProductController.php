@@ -38,9 +38,9 @@ class ProductController extends Controller
         // return $dates;
 
         $productDetails = DB::table('products')
-            ->join('product_reports', 'products.p_id', '=', 'product_reports.p_id')
-            ->select('products.p_name', 'product_reports.report_date', 'product_reports.remaining_qty')
-            ->orderBy('products.p_name', 'asc')
+            ->join('product_reports', 'products.id', '=', 'product_reports.product_id')
+            ->select('products.product_name', 'product_reports.report_date', 'product_reports.remaining_qty')
+            ->orderBy('products.product_name', 'asc')
             ->orderBy('product_reports.report_date', 'asc')
             ->where('product_reports.report_date', '>=', $start->format('Y-m-d'))
             ->where('product_reports.report_date', '<=', $end->format('Y-m-d'))
@@ -67,10 +67,10 @@ class ProductController extends Controller
     {
         $result = [];
         foreach ($productDetails as $item) {
-            $p_name = $item->p_name;
+            $p_name = $item->product_name;
             if (!isset($result[$p_name])) {
                 $result[$p_name] = [
-                    'p_name' => $p_name,
+                    'product_name' => $p_name,
                     'remaining_qty' => array_fill(0, count($dates), ""),
                 ];
             }

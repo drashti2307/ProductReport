@@ -20,7 +20,7 @@ class ProductReportFactory extends Factory
     {
         $faker = Faker::create();
         return [
-            'p_id' => rand(1, 10),
+            'product_id' => rand(1, 20),
             'report_date' => $faker->dateTimeBetween('2025-06-01', 'now'),
             'remaining_qty' => rand(1, 10),
         ];

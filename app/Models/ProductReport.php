@@ -12,15 +12,15 @@ class ProductReport extends Model
     use HasFactory;
 
     protected $fillable = [
-        'p_id',
+        'product_id',
         'report_date',
         'remaining_qty',
     ];
 
-    // public function product()
-    // {
-    //     return $this->belongsTo(Product::class);
-    // }
+    public function product()
+    {
+        return $this->belongsTo(Product::class, 'product_id');
+    }
     // protected static function newFactory()
     // {
     //     return ProductReportFactory::new();

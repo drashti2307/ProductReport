@@ -1,5 +1,8 @@
 <style>
-    @page{ margin: 5px; }
+    @page{
+        margin: 5px;
+        size: A4 landscape;
+    }
     body {
         font-family: sans-serif;
         margin: 0;
@@ -26,8 +29,22 @@
     }
 
     header, footer {
-        /* background-color: #f4f4f4; */
         text-align: center;
+    }
+
+    footer p{
+        position: absolute;
+        right: 0%;
+        /* transform: translateX(-4%); */
+        margin-bottom: auto;
+        bottom: 0%;
+    }
+
+    footer a{
+        position: absolute;
+        left: 1%;
+        transform: translateX(-10%);
+        bottom: 0;
     }
 
     .form-select {
@@ -38,6 +55,6 @@
         border: 1px solid black;
         width: 400px;
         height: 300px;
-        margin-left: 400px;
+        margin: auto;
     }
 </style>
