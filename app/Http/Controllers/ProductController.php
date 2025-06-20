@@ -36,62 +36,19 @@ class ProductController extends Controller
             $dates[] = $date->format('Y-m-d');
         }
         // return $dates;
-
+        $select = ['products.product_name'];
+        foreach ($dates as $date) {
+            $select[] = DB::raw("MAX(CASE WHEN report_date = '" . $date . "' THEN remaining_qty ELSE '' END) AS `" . $date . "`");
+        }
         $productDetails = DB::table('products')
             ->join('product_reports', 'products.id', '=', 'product_reports.product_id')
-            ->select('products.product_name', 'product_reports.report_date', 'product_reports.remaining_qty')
-            ->orderBy('products.product_name', 'asc')
-            ->orderBy('product_reports.report_date', 'asc')
-            ->where('product_reports.report_date', '>=', $start->format('Y-m-d'))
-            ->where('product_reports.report_date', '<=', $end->format('Y-m-d'))
+            ->select($select)
+            ->groupBy('products.product_name')
             ->get();
 
-        $transformed = $this->transformProductDetails($productDetails, $dates);
-        $total = $this->totalRemainings($transformed, $dates);
-        // return $transformed;
-        // return $total;
-        // return view('report', ['days' => $days, 'dates' => $dates, 'productDetails' => $transformed, 'total' => $total]);
-        $pdf = PDF::loadView('report', ['days' => $days, 'dates' => $dates, 'productDetails' => $transformed, 'total' => $total]);
+        // return $productDetails;
+        // return view('report', ['days' => $days, 'dates' => $dates, 'productDetails' => $productDetails]);
+        $pdf = PDF::loadView('report', ['days' => $days, 'dates' => $dates, 'productDetails' => $productDetails]);
         return $pdf->stream('ProductReport.pdf');
-    }
-
-
-    /**
-     * Transform product details to group by product name and map remaining_qty to week days.
-     *
-     * @param array $productDetails
-     * @param array $dates
-     * @return array
-     */
-    public function transformProductDetails($productDetails, $dates)
-    {
-        $result = [];
-        foreach ($productDetails as $item) {
-            $p_name = $item->product_name;
-            if (!isset($result[$p_name])) {
-                $result[$p_name] = [
-                    'product_name' => $p_name,
-                    'remaining_qty' => array_fill(0, count($dates), ""),
-                ];
-            }
-            $dateIndex = array_search($item->report_date, $dates);
-            if ($dateIndex !== false) {
-                $result[$p_name]['remaining_qty'][$dateIndex] = $item->remaining_qty;
-            }
-        }
-        return array_values($result);
-    }
-
-
-    public function totalRemainings($transformed, $dates)
-    {
-        $total = array_fill(0, count($dates), 0);
-        foreach ($transformed as $productDetail) {
-            for ($i = 0; $i < count($dates); $i++) {
-                if ($productDetail['remaining_qty'][$i] !== "")
-                    $total[$i] = array_sum(array($total[$i], $productDetail['remaining_qty'][$i]));
-            }
-        }
-        return $total;
     }
 }
