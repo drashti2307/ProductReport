@@ -4,7 +4,13 @@ namespace App\Http\Controllers;
 
 class weekCalculateController extends Controller
 {
-    static function getWeek() : array {
+    /**
+     * get weeek intervals of current month and returns as json array.
+     *
+     * @return array
+     */
+    static function getWeek(): array
+    {
         $month = date('m');
         $year = date('Y');
         $week = date('W', strtotime(date('Y-m-2')));

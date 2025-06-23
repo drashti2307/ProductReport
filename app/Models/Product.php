@@ -18,6 +18,6 @@ class Product extends Model
 
     public function productReport()
     {
-        return $this->hasMany(ProductReport::class, 'id');
+        return $this->hasMany(ProductReport::class, 'product_id');
     }
 }

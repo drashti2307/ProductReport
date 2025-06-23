@@ -14,7 +14,7 @@
         font-size: 13px;
     }
 
-    thead {
+    thead,tfoot {
         background-color: lightgray;
     }
 
