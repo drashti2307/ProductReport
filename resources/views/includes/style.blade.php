@@ -1,12 +1,13 @@
 <style>
-    @page{
-        margin: 5px;
+    @page {
+        margin: 110px 5px 32px;
         size: A4 landscape;
     }
+
     body {
         font-family: sans-serif;
         margin: 0;
-        padding: 0px;
+        padding: 0;
     }
 
     main {
@@ -14,37 +15,54 @@
         font-size: 13px;
     }
 
-    thead,tfoot {
+    thead,
+    tfoot {
         background-color: lightgray;
     }
 
     table {
         width: 100%;
+        border-collapse: collapse;
     }
 
-    table, th, td {
+    th,
+    td {
         border: 1px solid black;
-        border-collapse: collapse;
         padding: 5px;
     }
 
-    header, footer {
+    header {
+        position: fixed;
+        top: -110px;
+        left: 0;
+        right: 0;
+        height: 50px;
+        font-size: 15px !important;
+        color: #000;
         text-align: center;
+        line-height: 30px;
     }
 
-    footer p{
-        position: absolute;
-        right: 0%;
-        /* transform: translateX(-4%); */
-        margin-bottom: auto;
-        bottom: 0%;
+    footer {
+        position: fixed;
+        bottom: -32px;
+        font-size: 15px !important;
+        color: #000;
+        text-align: center;
+        height: 30px;
+        width: 100%;
     }
 
-    footer a{
+    #footera {
         position: absolute;
-        left: 1%;
-        transform: translateX(-10%);
-        bottom: 0;
+        bottom: 5px;
+        left: 10px;
+    }
+
+    footer p {
+        position: absolute;
+        right: 10px;
+        top: -10px;
     }
 
     .form-select {

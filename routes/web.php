@@ -11,6 +11,10 @@ use  App\Http\Controllers\weekCalculateController;
 
 Route::get('/', function () {
     return view('home', ['arr' => weekCalculateController::getWeek()]);
-});
+})->name('home');
 
-Route::get('/report', [ProductController::class, 'weeklyReport']);
+Route::post('/report', [ProductController::class, 'weeklyReport'])->name('report');
+
+Route::get('/report', function () {
+    return redirect()->route('home');
+});

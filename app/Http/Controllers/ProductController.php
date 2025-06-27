@@ -10,6 +10,13 @@ use Illuminate\Support\Facades\DB;
 use Carbon\CarbonPeriod;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Storage;
+use Dompdf\Dompdf;
+
+
 
 class ProductController extends Controller
 {
@@ -20,7 +27,7 @@ class ProductController extends Controller
      *
      * @return view
      */
-    public function weeklyReport(Request $request)
+    static public function weeklyReport(Request $request)
     {
         // Decode the week interval from the request
         $weekInterval = json_decode($request->input('week'));
@@ -45,11 +52,12 @@ class ProductController extends Controller
 
         // Fetch product reports within the specified date range
         // and map them to the required format
-
-        $productDetails = ProductReport::with('product')
+        $week = ProductReport::with('product')
             ->whereDate('report_date', '>=', $start->format('Y-m-d'))
-            ->whereDate('report_date', '<=', $end->format('Y-m-d'))
-            ->orderBy(Product::select('products.product_name')->whereColumn('products.id', 'product_reports.product_id'))
+            ->whereDate('report_date', '<=', $end->format('Y-m-d'));
+
+        $productDetails = $week
+            // ->orderBy(Product::select('products.product_name')->whereColumn('products.id', 'product_reports.product_id'))
             ->get()
             ->map(function ($report) use ($dates) {
                 $data = ['product_id' => $report->product->id];
@@ -63,10 +71,9 @@ class ProductController extends Controller
         // Calculate the total remaining quantity for each date in the week and ordered by report_date
         // The result will be a collection of total quantities indexed by report_date
 
-        $total = ProductReport::with('product')
-            ->whereDate('report_date', '>=', $start->format('Y-m-d'))
-            ->whereDate('report_date', '<=', $end->format('Y-m-d'))
-            ->select('report_date', DB::raw('SUM(remaining_qty) as total'))
+        $total = $week
+            ->reorder()
+            ->Select('report_date', DB::raw('SUM(remaining_qty) as total'))
             ->groupBy('report_date')
             ->orderBy('report_date')
             ->get()
@@ -77,12 +84,21 @@ class ProductController extends Controller
             ->orderBy('product_name')
             ->pluck('product_name', "id")->toArray();
 
-        // return a view with the data
-        return view('report', ['days' => $days, 'dates' => $dates, 'productDetails' => $productDetails, "products" => Product::pluck('product_name', "id")->toArray(), 'querytotal' => $total]);
+        $pdf = PDF::loadView('report', ['days' => $days, 'dates' => $dates, 'productDetails' => $productDetails, "products" => $product, 'querytotal' => $total, "download" => true]);
+        $pdf->setPaper('A4', 'landscape');
+        // Storage::disk('s3')->put('pdf/report.pdf', $pdf->output(), 'public');
 
-        // Generate a PDF from the view and stream it to the browser
-        $pdf = PDF::loadView('report', ['days' => $days, 'dates' => $dates, 'productDetails' => $productDetails, "products" => $product, 'querytotal' => $total]);
-        return $pdf->stream('ProductReport.pdf');
-        // return $pdf->download('ProductReport.pdf');
+        // return view('report_page', ['pdf' => $pdf->output(), 'week' => $weekInterval]);
+        if ($request->has('download')) {
+            return $pdf->download('ProductReport.pdf');
+        }
+        $view = view('report', ['days' => $days, 'dates' => $dates, 'productDetails' => $productDetails, "products" => $product, 'querytotal' => $total, "download" => true]);
+        $pdf = new Dompdf();
+        $pdf->loadHtml($view->render());
+        $pdf->setPaper('A4', 'landscape');
+        $pdf->render();
+        $content = $pdf->output();
+        Storage::disk('s3')->put('report.pdf', $content);
+        return view('report_page', ['week' => $weekInterval]);
     }
 }
