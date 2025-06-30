@@ -17,6 +17,7 @@
             <form action="report" method="POST">
                 @csrf
                 <div class="card-body">
+                    {{-- Selection of week interval --}}
                     <select name="week" class="form-select mb-3">
                         @foreach ($arr as $i)
                             <option value='@php echo json_encode([ $i[0] ,$i[1] ]); @endphp'>

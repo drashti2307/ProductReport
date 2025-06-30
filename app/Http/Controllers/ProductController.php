@@ -7,14 +7,9 @@ use App\Models\ProductReport;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
-use Carbon\CarbonPeriod;
-use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Storage;
-use Dompdf\Dompdf;
 
 
 
@@ -29,6 +24,12 @@ class ProductController extends Controller
      */
     static public function weeklyReport(Request $request)
     {
+        if ($request->has('download')) {
+            $path = $request->input('download');
+            return response()->streamDownload(function () use ($path) {
+                echo file_get_contents($path);
+            }, 'ProductReport.pdf');
+        }
         // Decode the week interval from the request
         $weekInterval = json_decode($request->input('week'));
 
@@ -84,21 +85,29 @@ class ProductController extends Controller
             ->orderBy('product_name')
             ->pluck('product_name', "id")->toArray();
 
-        $pdf = PDF::loadView('report', ['days' => $days, 'dates' => $dates, 'productDetails' => $productDetails, "products" => $product, 'querytotal' => $total, "download" => true]);
-        $pdf->setPaper('A4', 'landscape');
-        // Storage::disk('s3')->put('pdf/report.pdf', $pdf->output(), 'public');
-
-        // return view('report_page', ['pdf' => $pdf->output(), 'week' => $weekInterval]);
-        if ($request->has('download')) {
-            return $pdf->download('ProductReport.pdf');
-        }
-        $view = view('report', ['days' => $days, 'dates' => $dates, 'productDetails' => $productDetails, "products" => $product, 'querytotal' => $total, "download" => true]);
-        $pdf = new Dompdf();
-        $pdf->loadHtml($view->render());
-        $pdf->setPaper('A4', 'landscape');
-        $pdf->render();
+        // Load view into PDF using the data collected
+        $pdf = PDF::loadView(
+            'report',
+            [
+                'days' => $days,
+                'dates' => $dates,
+                'productDetails' => $productDetails,
+                "products" => $product,
+                'querytotal' => $total,
+                "download" => true
+            ]
+        );
+        // Get the content of the PDF
         $content = $pdf->output();
-        Storage::disk('s3')->put('report.pdf', $content);
-        return view('report_page', ['week' => $weekInterval]);
+
+        // Define the path where the PDF will be stored
+        // And upload it to the S3 storage
+        $uploadedPath = 'pdfs/report(week-' . $start->weekNumberInMonth . ').pdf';
+        Storage::disk('s3')->put($uploadedPath, $content);
+
+        // Get the URL of the uploaded PDF file
+        // And return it to the view
+        $url = Storage::cloud()->url($uploadedPath);
+        return view('report_page', ['url' => $url]);
     }
 }

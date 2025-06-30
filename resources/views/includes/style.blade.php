@@ -2,6 +2,7 @@
     @page {
         margin: 110px 5px 32px;
         size: A4 landscape;
+        width: 100%;
     }
 
     body {
