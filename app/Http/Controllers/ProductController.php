@@ -24,12 +24,6 @@ class ProductController extends Controller
      */
     static public function weeklyReport(Request $request)
     {
-        if ($request->has('download')) {
-            $path = $request->input('download');
-            return response()->streamDownload(function () use ($path) {
-                echo file_get_contents($path);
-            }, 'ProductReport.pdf');
-        }
         // Decode the week interval from the request
         $weekInterval = json_decode($request->input('week'));
 
