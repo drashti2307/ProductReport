@@ -11,7 +11,7 @@
 </head>
 <body>
     <header>
-        @include('includes.header', ['download' => $download ?? false])
+        @include('includes.header')
     </header>
 
     <main>

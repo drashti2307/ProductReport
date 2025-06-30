@@ -94,7 +94,6 @@ class ProductController extends Controller
                 'productDetails' => $productDetails,
                 "products" => $product,
                 'querytotal' => $total,
-                "download" => true
             ]
         );
         // Get the content of the PDF

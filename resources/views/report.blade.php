@@ -77,20 +77,6 @@
                     </tfoot>
                 </table>
             </div>
-            @if (!$download)
-                <div class="row">
-                    <div class="col-sm-12">
-                        <form method="post" action='{{ route('report', ['download' => 'pdf']) }}'>
-                            @csrf
-                            <input type="hidden" name="week"
-                                value='@php echo(json_encode([$dates[0] ,$dates[count($dates)-1] ])); @endphp'>
-                            <button type="submit" title="download" class="download-btn"><i class="bi bi-download"></i></button>
-                        </form>
-                        {{-- <a href="{{ route('report', ['download' => 'pdf']) }}">download</a> --}}
-                    </div>
-                </div>
-                <br>
-            @endif
         </div>
     </div>
 @endsection

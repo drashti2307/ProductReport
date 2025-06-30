@@ -8,7 +8,7 @@
             </div>
             <div style="position: absolute;width: 100px;height: 100px;right: 12px;bottom: 12px;">
                 {{-- Download button to download the pdf which redirects to report route with file url --}}
-                <form method="post" action="{{ route('report', ['download' => $path ]) }}"
+                <form method="post" action="{{ route('report', ['download' => $url ]) }}"
                     style="height: 100%;width:100%; position: relative;">
                     @csrf
                     <button type="submit" title="download"
