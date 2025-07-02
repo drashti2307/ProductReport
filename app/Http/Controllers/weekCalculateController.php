@@ -11,12 +11,12 @@ class weekCalculateController extends Controller
      */
     static function getWeek(): array
     {
-        $month = date('m');
+        $month = date('06');
         $year = date('Y');
-        $week = date('W', strtotime(date('Y-m-2')));
+        $week = date('W', strtotime(date('Y-06-2')));
 
         $arr = [];
-        $start = date('m/01/Y');
+        $start = date('06/01/Y');
         $unix = strtotime($year . 'W' . $week . '+6 days');
         while (date('m', $unix) == $month) {
             $end = date('m/d/Y', $unix - 86400);

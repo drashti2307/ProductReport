@@ -8,11 +8,11 @@
                         {{-- This section generates the table header with the days of the week and the dates.
                 It uses the $days array to display the days of the week and the $dates array for the dates. --}}
                         <tr>
-                            <th></th>
+                            <th width="250px"></th>
                             @for ($i = 0; $i < count($days); $i++)
                                 <th>{{ $days[$i] }}</th>
                             @endfor
-                            <th rowspan="2">Result</th>
+                            <th rowspan="2" width="70px">Result</th>
                         </tr>
                         <tr>
                             <th>Date</th>

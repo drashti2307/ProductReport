@@ -11,8 +11,6 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Storage;
 
-
-
 class ProductController extends Controller
 {
 
@@ -29,7 +27,7 @@ class ProductController extends Controller
 
         $days = $dates = [];
 
-        // Create a CarbonPeriod to iterate through the week
+        // Create CarbonPeriod to iterate through the week
         $start =  Carbon::parse($weekInterval[0]); // Carbon::now()->startOfWeek(Carbon::SUNDAY);
         $end =  Carbon::parse($weekInterval[1]); // Carbon::now()->endOfWeek(Carbon::SATURDAY);
 
@@ -63,8 +61,8 @@ class ProductController extends Controller
                 return ($data);
             });
 
-        // Calculate the total remaining quantity for each date in the week and ordered by report_date
-        // The result will be a collection of total quantities indexed by report_date
+        /* Calculate the total remaining quantity for each date in the week and ordered by
+        report_date The result will be a collection of total quantities indexed by report_date */
 
         $total = $week
             ->reorder()
@@ -90,17 +88,20 @@ class ProductController extends Controller
                 'querytotal' => $total,
             ]
         );
+
         // Get the content of the PDF
         $content = $pdf->output();
 
-        // Define the path where the PDF will be stored
-        // And upload it to the S3 storage
+        // Define the path where the PDF will be stored And upload it to the S3 storage
         $uploadedPath = 'pdfs/report(week-' . $start->weekNumberInMonth . ').pdf';
         Storage::disk('s3')->put($uploadedPath, $content);
-
-        // Get the URL of the uploaded PDF file
-        // And return it to the view
         $url = Storage::cloud()->url($uploadedPath);
-        return view('report_page', ['url' => $url]);
+
+        $assignedUrl = $url;
+        $disk = Storage::disk('s3');
+        if(method_exists($disk, 'temporaryUrl'))
+            $assignedUrl = $disk->temporaryUrl($uploadedPath, now()->addMinutes(30));
+
+        return redirect($assignedUrl);
     }
 }
